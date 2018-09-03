@@ -1,0 +1,12 @@
+<div class="screen-content">
+    <form class="w-75" method="POST" action="/setScreen">
+        <select name="screen" class="custom-select" size="4">
+            <% screens.forEach(function(screen){ %>
+                <option value="<%= screen.name %>">
+                    <%= screen.name %>
+                </option>
+                <% }); %>
+        </select>
+        <button class="d-block mx-auto align-self-center btn mt-3" type="submit">Apply</button>
+    </form>
+</div>

@@ -1,0 +1,1 @@
+C:\Users\tuannguyenm1\AppData\Roaming\npm\nodemon start

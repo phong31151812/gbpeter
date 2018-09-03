@@ -1,0 +1,185 @@
+<style scoped>
+	.app {
+		overflow: unset;
+	}
+
+	#blocklyDiv {
+		overflow: auto;
+	}
+
+	.injectionDiv {
+		overflow-x: auto;
+	}
+
+	.injectionDiv .blocklySvg {
+		width: 2000px;
+		overflow-x: auto;
+	}
+</style>
+<p>
+	<button class="btn" onclick="showCode()">Show Python code</button>
+	<button class="btn" onclick="runCode()">Run Python code</button>
+</p>
+
+<div id="blocklyDiv" style="height: <%= screen.height %>px; width: <%= screen.width %>px;"></div>
+
+<xml id="startBlocks" style="display: none">
+
+</xml>
+<script src="/js/blockly_compressed.js"></script>
+<script src="/js/blocks_compressed.js"></script>
+<script src="/js/python_compressed.js"></script>
+<script src="/js/en.js"></script>
+<script>
+	jQuery(function ($){
+		function isNumber(n) { return !isNaN(parseFloat(n)) && !isNaN(n - 0) };
+		$(document.body).on('focus', 'div.blocklyWidgetDiv', function(){
+			$('input.blocklyHtmlInput').keyboard({
+				layout: 'custom',
+				  customLayout: {
+				   'normal' : [    
+					'8 9 . -',
+					'4 5 6 7',
+					'0 1 2 3',
+					'{bksp} {a} {c}'
+				   ]
+				  },  
+				  // Prevent keys not in the displayed keyboard from being typed in
+				  restrictInput : true,  
+				  acceptValid : true,
+				  validate : function(keyboard, value, isClosing){   
+				   return isNumber(value);
+				  },
+				  accepted : function(event, keyboard, el) {
+					Blockly.WidgetDiv.hide()
+				  }
+			});
+		});
+		
+	});
+
+	function createTextField(blockBox, element) {
+		blockBox.appendDummyInput()
+			.appendField(element);
+	};
+	function createInputField(blockBox, element, beforeText, afterText, unitText, minValue, maxValue) {
+		blockBox.appendDummyInput()
+			.appendField(beforeText + " " + element + " " + afterText)
+			.appendField(new Blockly.FieldNumber(minValue, minValue, maxValue, 1), element)
+			.appendField(unitText);
+	};
+	function createDropdownField(blockBox, element, arrayDropdown) {
+		blockBox.appendDummyInput()
+			.appendField(element)
+			.appendField(new Blockly.FieldDropdown(arrayDropdown), element);
+	};
+
+	function buildTextField(arrOperations, color) {
+		return buildCustomBlocklyCore(arrOperations, color, function (blockBox, element) {
+			createTextField(blockBox, element);
+		});
+	};
+
+	function buildInputField(arrOperations, beforeText, afterText, unitText, color, minValue, maxValue) {
+		if (minValue === undefined || minValue === null)
+			minValue = 1;
+		if (maxValue === undefined || maxValue === null)
+			maxValue = Infinity;
+		return buildCustomBlocklyCore(arrOperations, color, function (blockBox, element) {
+			createInputField(blockBox, element, beforeText, afterText, unitText, minValue, maxValue);
+		});
+	};
+
+	function buildDropdownField(arrOperations, color, arrayDropdown) {
+		return buildCustomBlocklyCore(arrOperations, color, function (blockBox, element) {
+			createDropdownField(blockBox, element, arrayDropdown);
+		});
+	};
+
+	function buildCustomBlocklyCore(arrOperations, color, functionCreateField) {
+		arrOperations.forEach((element, index, array) => {
+			Blockly.Blocks[element] = {
+				init: function () {
+					functionCreateField(this, element);
+					this.setInputsInline(true);
+					this.setPreviousStatement(true, null);
+					this.setNextStatement(true, null);
+					this.setColour(color);
+					this.setTooltip(element);
+					this.setHelpUrl("");
+				}
+			};
+			Blockly.Python[element] = function (block) {
+				// Search the text for a substring.
+				var operator = block.getFieldValue(element);
+				var code = element;
+				if (operator !== null)
+					code += ':' + operator;
+				return [code + '\n'];
+			};
+		});
+	};
+	function buildToolbox(arrOperations) {
+		var boxs = '';
+		arrOperations.forEach((element, index, array) => {
+			boxs += '  <block type="' + element + '"></block>';
+		});
+		return boxs;
+	};
+
+	var toolbox = '<xml>';
+	var operationsText = ["Text 1","text2"];
+	buildTextField(operationsText, 200);
+	toolbox += buildToolbox(operationsText);
+	
+	var operationsMove = ["forward", "backward"];
+	buildInputField(operationsMove, "Move", "for", "seconds", 230);
+	toolbox += buildToolbox(operationsMove);
+
+	var operationsTurn = ["left", "right"];
+	buildInputField(operationsTurn, "Turn", "for", "degrees", 20, 0, 360);
+	toolbox += buildToolbox(operationsTurn);
+
+	var operationsHand = ["Right hand", "Left hand", "Both hand"];
+	buildDropdownField(operationsHand, 120, [["Up", "Up"], ["Down", "Down"]]);
+	toolbox += buildToolbox(operationsHand);
+
+	var operationsTurnHead = ["Turn Head"];
+	buildDropdownField(operationsTurnHead, 65, [["Up", "Up"], ["Down", "Down"], ["Forward", "Forward"]]);
+	toolbox += buildToolbox(operationsTurnHead);
+
+	toolbox += '</xml>';
+	var demoWorkspace = Blockly.inject('blocklyDiv', { toolbox: toolbox });
+
+	Blockly.Xml.domToWorkspace(document.getElementById('startBlocks'),
+		demoWorkspace);
+
+	function showCode() {
+		// Generate Python code and display it.
+		Blockly.Python.INFINITE_LOOP_TRAP = null;
+		var code = Blockly.Python.workspaceToCode(demoWorkspace);
+		alert(code);
+	}
+
+	function runCode() {
+		// Generate Python code and run it.
+		window.LoopTrap = 1000;
+		Blockly.Python.INFINITE_LOOP_TRAP =
+			'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+		var code = Blockly.Python.workspaceToCode(demoWorkspace);
+		Blockly.Python.INFINITE_LOOP_TRAP = null;
+		try {
+			//send to python
+			$.ajax({
+				url: '/scratch/callPython',
+				method: 'POST',
+				data: { param: code.replace(/(\n\n)/gm, '\n') }
+			}).done(function (data) {
+				alert(data);
+			});
+			//eval(code)
+		} catch (e) {
+			alert(e);
+		}
+	}
+</script>

@@ -1,0 +1,189 @@
+html {
+    height: 100%;
+}
+
+body {
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.horizontal {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    overflow: auto;
+}
+
+.app-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px;
+    height: 100%;
+}
+
+.app-menu .item-img {
+    width: 150px;
+    height: 150px;
+    border: .05em solid;
+    border-color: black;
+}
+
+.app-menu .item-img:hover {
+    cursor: pointer;
+}
+
+.app-menu .item-text {
+    font-weight: bold;
+    text-align: center;
+    margin: 0px;
+}
+
+.app-banner {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 2em 0em 1.7em;
+}
+
+.app-banner .banner-title {
+    text-align: center;
+    margin: auto;
+}
+
+.app-banner .banner-img {
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    right: 0;
+}
+
+.app-settings-items {
+    display: flex;
+    flex-direction: column;
+    border-top: .2em solid black;
+    padding: 15px;
+}
+
+.app-settings-items .item-btn {
+    background-color: transparent;
+    border: 1px solid black;
+    padding: .375em 0em;
+    font-weight: bold;
+    line-height: 1.5;
+    margin: .5em;
+}
+
+.app-settings-items .item-btn:hover {
+    cursor: pointer;
+}
+
+.top-bar {
+    border-bottom: .2em solid black;
+    padding: 4px;
+    padding-bottom: 8px;
+    position: relative;
+}
+
+.top-bar .date {
+    float: left;
+    font-weight: bold;
+}
+
+.top-bar .clock {
+    border: .08em solid;
+    border-color: #6c757d;
+    padding: 2px 5px;
+    display: table;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    font-weight: bold;
+}
+
+.top-bar .wifi-battery {
+    float: right;
+}
+
+.top-bar .battery-img {
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+.screen-content {
+    padding: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+input,
+input::-webkit-input-placeholder {
+    line-height: 3;
+    padding: 1px;
+}
+
+.a-btn {
+    color: inherit;
+    text-decoration: none;
+    width: 100%;
+    display: block;
+}
+
+.a-btn:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+.home-icon {
+    top: 0;
+    left: 0;
+    position: absolute;
+}
+
+#messages {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.msg-user {
+    color: #5f42f4;
+}
+
+.msg-bot {
+    margin-bottom: 1.3em;
+}
+
+#messages-box {
+    overflow-y: auto;
+    align-items: unset;
+    position: relative;
+}
+
+.msg {
+    word-break: break-word;
+    background-color: transparent;
+    margin-top: 0.5em;
+}
+
+.latest-msg {
+    font-weight: bold;
+}
+
+.settings-icon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}

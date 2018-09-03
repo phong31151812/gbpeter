@@ -1,0 +1,52 @@
+<style scoped>
+    .cmd-area {
+        background: black !important;
+        color: white;
+    }
+</style>
+<textarea id="cmd" readonly class="w-100 h-75 mb-2 form-control cmd-area">
+</textarea>
+<div class="d-flex flex-row">
+    <input class="form-control w-75" id="cmd" name="cmd" type="text" placeholder="Enter command...">
+    <button id="exec" class="btn w-25" type="submit">Execute</button>
+</div>
+
+<script>
+    jQuery(function ($) {
+        $('input#cmd').keyboard({ openOn: 'click', autoAccept: true });
+        getCd();
+
+        $('button#exec').click(function () {
+            var cmd = $('input#cmd').val();
+            $('input#cmd').val('');
+            appendVal(cmd);
+
+            if (cmd != '') {
+                $.post('/runCmd', { cmd: cmd }, function (data) {
+                    var args = cmd.split(' ');
+                    if (args[0] == 'cd' && !data.includes('Path does not exists')) {
+                        appendVal('\n');
+                        getCd();
+                    }
+                    else {
+                        appendVal('\n' + data + '\n');
+                        getCd();
+                    }
+                });
+            }
+        })
+
+        function appendVal(val) {
+            var textArea = $('textarea#cmd');
+            textArea.val(textArea.val() + String(val));
+            textArea.animate({ scrollTop: textArea[0].scrollHeight }, 200);
+        }
+
+        function getCd() {
+            $.post('/runCmd', { cmd: 'cd' }, function (data) {
+                appendVal(data + '> ');
+            });
+        }
+    });
+
+</script>

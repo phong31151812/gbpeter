@@ -1,0 +1,37 @@
+<div class="app-settings">
+	<div class="app-banner">
+		<h1 class="banner-title">Settings</h1>
+		<img class="banner-img" src="/css/images/el/settings.png" />
+	</div>
+	<div class="app-settings-items">
+		<button class="item-btn">
+			<a class="a-btn font-weight-bold" href="/settings/connectWifi">
+				Wifi
+			</a>
+		</button>
+		<button class="item-btn">
+			<a class="a-btn font-weight-bold" href="/settings/screen">
+				Screen
+			</a>
+		</button>
+		<button class="item-btn">
+			<a class="a-btn font-weight-bold" href="/settings/security">
+				Security
+			</a>
+		</button>
+		<button id="logout" class="item-btn">
+			<a class="a-btn font-weight-bold">
+				Log out
+			</a>
+		</button>
+		<form id="logout" method="POST" action="/logout"></form>
+	</div>
+</div>
+
+<script>
+	jQuery(function ($) {
+		$('button#logout').click(function () {
+			$('form#logout').submit();
+		});
+	})
+</script>

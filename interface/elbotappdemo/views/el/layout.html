@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>E-Learning Robot</title>
+    <link rel="stylesheet" href="/css/el/styles.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/jquery-ui.min.css">
+    <link rel="stylesheet" href="/css/keyboard.css">
+    <script src="/js/jquery-latest.min.js"></script>
+    <script src="/js/moment.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/jquery-ui.min.js"></script>
+    <script src="/js/jquery.keyboard.js"></script>
+</head>
+
+<body>
+    <div id="app" class="app" style="width:<%= screen.width %>px;height:<%= screen.height %>px">
+        <% include partials/statusBar.html %>
+            <a class="align-self-start" href="/home">
+                <img width="30px" src="/icons/el/home.svg" />
+            </a>
+            <%- body %>
+    </div>
+</body>
+
+</html>

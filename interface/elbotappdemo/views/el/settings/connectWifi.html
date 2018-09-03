@@ -1,0 +1,62 @@
+<div class="screen-content">
+	<select id="network" class="custom-select w-75">
+		<% if (!networks.length) { %>
+			<option value="" disabled selected>No available network...</option>
+			<% } else { %>
+				<% networks.forEach(function(network){ %>
+					<option value="<%= network.ssid %>">
+						<%= network.ssid %>
+					</option>
+					<% }); %>
+						<% } %>
+	</select>
+	<div class="m-2">
+		<input class="<%= (!networks.length) ? 'd-none' : '' %>" required id="pwd" name="pwd" type="password" placeholder="Enter password...">
+	</div>
+	<button id="connect" class="align-self-center btn <%= (!networks.length) ? 'd-none' : '' %>" type="submit">Connect</button>
+</div>
+<div id="dialog">
+</div>
+
+<script>
+	jQuery(function ($) {
+		$('#pwd').keyboard({ openOn: 'click', autoAccept: true });
+
+		var dialog = $("#dialog");
+		dialog.dialog({
+			autoOpen: false,
+			modal: true,
+			buttons: {
+				Okay: {
+					click: function () {
+						$(this).dialog('close');
+					},
+					text: 'Okay'
+				}
+
+			},
+		});
+		$(".ui-dialog-titlebar").hide();
+
+		var dialogContent = $('<p></p>').addClass('small');
+
+		$("button#connect").click(function () {
+			$.ajax({
+				type: 'POST',
+				url: '/connectWifi',
+				data: {
+					ssid: $('#network').find(":selected").val(),
+					psk: $('pwd').val()
+				}
+			}).done(function (data) {
+				dialog.html(dialogContent.text(data));
+			}).fail(function (err) {
+				dialog.html(dialogContent.text(err));
+			});
+
+			dialog.dialog('open');
+		});
+
+	});
+
+</script>

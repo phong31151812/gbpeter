@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<style>
+           .error{
+			   color: red
+		   }
+		</style>		
+		<!-- jQuery (required) & jQuery UI + theme (optional) -->
+		<link href="css/jquery-ui.min.css" rel="stylesheet">
+		<!-- still using jQuery v2.2.4 because Bootstrap doesn't support v3+ -->
+		<script src="js/jquery-latest.min.js"></script>
+		<script src="js/jquery-ui.min.js"></script>
+
+		<!-- keyboard widget css & script (required) -->
+		<link href="css/keyboard.css" rel="stylesheet">
+		<script src="js/jquery.keyboard.js"></script>
+
+		<!-- demo only -->
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"> -->
+		<link href="css/demo.css" rel="stylesheet">
+		<script src="js/bootstrap.min.js"></script>
+		<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+		<script src="js/demo.js"></script>
+		<link href="css/startup.css" rel="stylesheet">
+    </head>
+    <body style="" class="startup">
+
+	<!-- views/contact.ejs -->
+	
+	<div class="text title" style="">Connect Wifi</div>
+	
+	<form method="post" action="/ConnectWifi">
+		<div class="">
+			<label for="AvailableWif" class="startupLabelForm">Select available Wifi:</label>
+			<div class="startupContentForm">
+				<select class="form-control <%= errors.message ? 'form-field-invalid' : '' %>" required name="wifi" size="3">
+					<% if (dataNetworks != null) { %>
+						<% dataNetworks.forEach(function(network) { %>
+							<% if (network.ssid != '') { %>
+								<option value='<%= network.ssid %>'><%= network.ssid %></option>
+							<% } %>							
+						<% }); %>						
+					<% } %>							
+				</select>
+				<% if (errors.wifi) { %>
+					<div class="error"><%= errors.wifi.msg %></div>
+				  <% } %>
+			</div>				
+		</div>
+		<br>
+		<div class="">
+			<label for="password" class="startupLabelForm">Password</label>
+			<div class="startupContentForm">
+				<input required class="form-control <%= errors.message ? 'form-field-invalid' : '' %>" id="password" name="password" type="text" placeholder="Enter password..." />
+				<% if (errors.password) { %>
+					<div class="error"><%= errors.password.msg %></div>
+				  <% } %>
+			</div>
+		</div>
+		<% if (errors.status) { %>
+			<div class="text notification"><%= errors.status.msg %></div>
+		  <% } %>
+
+		<div class="actionBtn">
+			<button class="startupbtn btn btn-primary" type="submit">Connect</button>			
+			<button class="startupbtn btn btn-success" onclick="location.href='/';return false;" style="float:right;">Home</button> 
+		</div>
+	</form>	
+	
+    </body>
+	<script>
+		jQuery(function($) {
+			$('select option:first-child').attr("selected", "selected");			
+		});
+	</script>
+</html>

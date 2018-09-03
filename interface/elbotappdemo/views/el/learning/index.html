@@ -1,0 +1,83 @@
+<div id="messages-box" class="screen-content">
+  <ul id="messages">
+    <li id="empty" class="text-muted">You have no messages.</li>
+  </ul>
+</div>
+<a id="settings" class="align-self-end" href="#">
+  <img src="/icons/el/settings.svg" width="30px" />
+</a>
+<div id="settings" class="form-group" title="Settings">
+  <label for="formControlRange">Volume</label>
+  <b id="vol" class="float-right"></b>
+  <input type="range" class="form-control-range" id="volume" min="0" max="100">
+</div>
+<script>
+  jQuery(function ($) {
+    var dialog = $("div#settings");
+    var socket = io();
+
+    dialog.dialog({
+      autoOpen: false,
+      modal: true
+    });
+    $('a#settings').click(function () {
+      dialog.dialog('open');
+    });
+
+    $.get('/settings/getVolume', function (vol) {
+      setAppVolume(vol);
+    });
+
+    socket.on('Learning_English', function (data) {
+      if ($('li#empty')) {
+        $('li#empty').remove();
+      }
+      $('li').removeClass('latest-msg');
+
+      var result = getPrefixAndVal(data);
+      if (result.prefix == "volume") {
+        setAppVolume(result.val);
+      } else {
+        appendMsg(result.val, result.prefix);
+        $('div#messages-box').animate({ scrollTop: $('div#messages-box')[0].scrollHeight }, 200);
+      }
+    });
+
+    $('input#volume').on('input change', function (e) {
+      var vol = $('input#volume').val();
+      $('b#vol').text(vol);
+      if (e.type == 'change') {
+        setSysVolume(vol);
+      }
+    });
+  });
+
+  function appendMsg(msg, prefix) {
+    var li = $('<li>').text(msg).addClass('latest-msg msg');
+    if (prefix.search('user') != -1) {
+      li.addClass('msg-user');
+    } else if (prefix.search('bot') != -1) {
+      li.addClass('msg-bot');
+    }
+    $('#messages').append(li);
+  }
+
+  function getPrefixAndVal(data) {
+    var arr = data.toLowerCase().split(':');
+    return {
+      prefix: arr[0],
+      val: arr[1].trim()
+    }
+  }
+
+  function setAppVolume(vol) {
+    $('input#volume').val(vol*1);
+    $('b#vol').text(vol);
+  }
+
+  function setSysVolume(vol) {
+    $.post('/settings/setVolume', { vol: vol }, function(data){
+      alert(data);
+    });
+  }
+</script>

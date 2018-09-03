@@ -1,0 +1,41 @@
+body{
+	width:445px; 
+	margin-left:20px;
+}
+.startup .title {
+	font-size : 2em;text-align: center;margin: 10px;
+}
+.startup .startupbtn{
+	height:50px;
+	width:210px;
+	font-size : 1.5em;
+	margin: 5px;				
+}
+.startup .startupLabelForm {
+	width:20%
+}
+
+.startup .startupContentForm {
+	width:75%;
+	float:right;
+}
+
+.startup .startupHalf {
+	width:50%
+}
+
+.startup .actionBtn {
+	position: fixed;
+    bottom: 0;
+    width: 95%;
+	margin-left: -10px;
+}
+
+.startup .notification {
+	font-size : 2em;text-align: center;margin: 10px;
+	color: green;
+}
+
+.startup .error{
+   color: red
+}

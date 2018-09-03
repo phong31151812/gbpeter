@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="js/jquery-latest.min.js"></script>
+		<link href="css/startup.css" rel="stylesheet">
+		<script src="js/bootstrap.min.js"></script>
+    </head>
+    <body style="" class="startup">
+
+	<div class="text title" style="">Call Python</div>
+	
+	<form method="post" action="/CallPython">		
+		<div class="">
+			<label for="fileName" class="startupLabelForm">Tên tập tin</label>
+			<div class="startupContentForm">
+				<input required class="form-control <%= errors.message ? 'form-field-invalid' : '' %>" id="fileName" name="fileName" type="text" placeholder="Điền tên tập tin" />
+				<% if (errors.fileName) { %>
+					<div class="error"><%= errors.fileName.msg %></div>
+				  <% } %>
+			</div>
+		</div>
+		</br>
+		<div class="">
+			<label for="para1" class="startupLabelForm">Tham số</label>
+			<div class="startupContentForm">
+				<input required class="form-control <%= errors.message ? 'form-field-invalid' : '' %>" id="para1" name="para1" type="text" placeholder="Điền tham số" />
+				<% if (errors.para1) { %>
+					<div class="error"><%= errors.para1.msg %></div>
+				  <% } %>
+			</div>
+		</div>
+		<% if (errors.result) { %>
+			<div class="text notification"><%= errors.result.msg %></div>
+		  <% } %>
+
+		<div class="actionBtn">
+			<button class="startupbtn btn btn-primary" type="submit">Thực hiện</button>			
+			<button class="startupbtn btn btn-success" onclick="location.href='/';return false;" style="float:right;">Home</button> 
+		</div>
+	</form>	
+	
+    </body>
+	<script>
+		jQuery(function($) {
+			$('select option:first-child').attr("selected", "selected");			
+		});
+	</script>
+</html>

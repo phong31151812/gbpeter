@@ -1,0 +1,52 @@
+<div class="top-bar">
+    <span class="date"></span>
+    <span class="clock"></span>
+    <span class="wifi-battery">
+        <img id="wifi" src="" />
+        <img id="battery" class="battery-img" />
+    </span>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    jQuery(function ($) {
+        var UPDATE_DATE_TIME_STATUS = 1000;
+        var UPDATE_BATTERY = 600000;
+        var socket = io();
+
+        updateStatus();
+        updateBattery();
+
+        $("img#wifi").attr("src", "/icons/el/wifi-off.svg");
+
+        socket.on('wifi_status', function (connected) {
+            console.log(connected);
+            var iconPath = (connected) ? "/icons/el/wifi.svg" : "/icons/el/wifi-off.svg";
+            $("img#wifi").attr("src", iconPath);
+        });
+
+        function updateStatus() {
+            var now = moment();
+            $('span.clock').text(now.format('k:mm'));
+            $('span.date').text(now.format('DD MMMM YYYY'));
+            setTimeout(updateStatus, UPDATE_DATE_TIME_STATUS);
+        }
+
+        function updateBattery() {
+            $.get('/getBattery', function (percentage) {
+                var batteryIcon;
+                if (percentage <= 25) {
+                    batteryIcon = "/icons/el/battery_20.svg";
+                } else if (percentage <= 50) {
+                    batteryIcon = "/icons/el/battery_50.svg";
+                } else if (percentage <= 75) {
+                    batteryIcon = "/icons/el/battery_80.svg";
+                } else {
+                    batteryIcon = "/icons/el/battery_full.svg";
+                }
+                $("img#battery").attr("src", batteryIcon);
+            });
+
+            setTimeout(updateBattery, UPDATE_BATTERY);
+        }
+    });
+</script>

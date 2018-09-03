@@ -1,0 +1,21 @@
+<div class="screen-content">
+    <% if (err) { %>
+        <small class="form-text text-danger">
+            <%= err %>
+        </small>
+        <% } %>
+            <form class="d-flex flex-column" method="POST" action="/login">
+                <div class="m-2">
+                    <input required id="pwd" name="pwd" type="password" placeholder="Enter password...">
+                </div>
+                <button class="align-self-center btn" type="submit">Login</button>
+            </form>
+</div>
+<script>
+    jQuery(function ($) {
+        $('#pwd').keyboard({ 
+            openOn: 'click',
+            autoAccept: true
+        });
+    });
+</script>
